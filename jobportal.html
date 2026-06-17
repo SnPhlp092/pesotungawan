@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PESO Integrated Portal & Administrative Workspace</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 76px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-logo {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .logo-text-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .logo-text-sub {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--border);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .portal-view {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .portal-view.active {
+            display: block;
+        }
+
+        .hero-engine {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 50px 0 60px 0;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .hero-center {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .hero-center h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .hero-center p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+        }
+
+        .main-layout-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1.6fr;
+            gap: 32px;
+            margin-top: 32px;
+            margin-bottom: 80px;
+        }
+
+        .content-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+        }
+
+        .job-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .job-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            background: var(--bg-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-card-details h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .job-company {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .pill {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            margin-right: 6px;
+        }
+
+        .pill-status-pending { background: #fef3c7; color: #d97706; }
+        .pill-status-approved { background: #d1fae5; color: #059669; }
+
+        .input-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .input-block label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .input-block input, .input-block select, .input-block textarea {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            background: var(--bg-body);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .input-block input:focus, .input-block select:focus, .input-block textarea:focus {
+            border-color: var(--accent);
+            background: white;
+        }
+
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-action:hover { background: var(--accent-hover); }
+
+        .login-canvas {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border-radius: var(--radius-lg); padding: 40px; color: white; max-width: 460px; margin: 60px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .analytics-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 32px 0; }
+        .analytics-card { background: var(--bg-card); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow); }
+        .analytics-count { font-size: 2rem; font-weight: 800; color: var(--accent); }
+        .analytics-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #64748b; }
+
+        .app-table {
+            width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem;
+        }
+        .app-table th, .app-table td {
+            text-align: left; padding: 10px; border-bottom: 1px solid var(--border);
+        }
+        .app-table th { background: var(--bg-body); color: var(--text-dark); }
+        .thumbnail-link { color: var(--accent); text-decoration: underline; cursor: pointer; font-weight: 600; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 1024px) { .main-layout-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <!-- Integrated Global Header Architecture -->
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo-area" onclick="switchPortal('seeker')">
+                <div class="logo-logo">P</div>
+                <div>
+                    <span class="logo-text-title">PESO-Portal</span>
+                    <span class="logo-text-sub">LGU Framework Hub</span>
+                </div>
+            </a>
+            
+            <nav class="nav-tabs" id="global-tabs">
+                <button class="tab-btn active" id="btn-seeker" onclick="switchPortal('seeker')">For Job Seekers</button>
+                <button class="tab-btn" id="btn-employer" onclick="switchPortal('employer')">For Employers</button>
+                <button class="tab-btn" id="btn-admin-gate" style="background: #cbd5e1; font-weight:700;" onclick="switchPortal('admin-login')">Admin Access</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- VIEW 1: Job Seekers Workspace & Interactive Dynamic Details Area -->
+    <div id="view-seeker" class="portal-view active">
+        <section class="hero-engine">
+            <div class="container"><div class="hero-center"><h1>Verified Municipal Employment Stream</h1><p>Explore authorized listings, analyze dynamic parameters, and submit document attachments straight to the verification office.</p></div></div>
+        </section>
+
+        <main class="container">
+            <div class="main-layout-grid">
+                <div class="content-panel">
+                    <h2 class="panel-title">Active Public Placements</h2>
+                    <div class="job-feed" id="public-job-feed"></div>
+                </div>
+                <div>
+                    <div class="content-panel" id="job-detail-viewport">
+                        <p style="text-align: center; color: var(--text-main); padding: 40px 0;">Select an employment opportunity from the catalog stream on the left to unpack prerequisites, file information records, and attach required verification files.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- VIEW 2: Employer Openings Intake Interface -->
+    <div id="view-employer" class="portal-view">
+        <section class="hero-engine"><div class="container"><div class="hero-center"><h1>Enterprise Job Placement Intake</h1><p>Deploy vacancy conditions into the localized system architecture. Submissions remain hidden until administrative validation completes.</p></div></div></section>
+        <main class="container" style="margin-top: 32px;">
+            <div class="content-panel" style="max-width: 800px; margin: 0 auto;">
+                <h2 class="panel-title">Register a New Job Vacancy Specification</h2>
+                <form id="employer-post-form" onsubmit="handleEmployerPost(event)">
+                    <div class="input-block"><label>Job Position Title</label><input type="text" id="job-title" required placeholder="e.g., Agricultural Logistics Lead"></div>
+                    <div class="input-block"><label>Enterprise Entity Name</label><input type="text" id="company-name" required placeholder="e.g., AgriCorp Hubs"></div>
+                    <div class="input-block"><label>Compensation Structure (PHP / Month)</label><input type="text" id="job-pay" required placeholder="e.g., 20,000 - 25,000"></div>
+                    <div class="input-block"><label>Location Area Sector</label><select id="job-loc"><option value="">Select a location...</option><option value="Baluran">Baluran</option><option value="Batungan">Batungan</option><option value="Cayamcam">Cayamcam</option><option value="Datu Tumanggong">Datu Tumanggong</option><option value="Gaycon">Gaycon</option></select></div>
+                    <div class="input-block"><label>Job Description Requirements</label><textarea id="job-desc" rows="4" required placeholder="Outline required technical task management expectations..."></textarea></div>
+                    <button type="submit" class="btn-action" style="width: 100%;">Transmit Placement For Verification Review</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- VIEW 3: Administrative Access Gate -->
+    <div id="view-admin-login" class="portal-view">
+        <div class="login-canvas">
+            <h2 style="text-align:center; margin-bottom:16px;">Secure Gateway Entrance</h2>
+            <div id="error-box" style="background:#fee2e2; color:var(--danger); padding:10px; margin-bottom:15px; border-radius:4px; display:none; font-weight:600;">Invalid Credentials. Please check values.</div>
+            <form onsubmit="handleSecureLogin(event)">
+                <div class="input-block"><label style="color:white;">Administrative Identity Username</label><input type="text" id="admin-user" required autocomplete="off"></div>
+                <div class="input-block"><label style="color:white;">Access Security Password Pin</label><input type="password" id="admin-pass" required></div>
+                <button type="submit" class="btn-action" style="width:100%; margin-top:10px;">Authorize System Workspace</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- VIEW 4: Core Oversight Dashboard Platform -->
+    <div id="view-admin-dashboard" class="portal-view">
+        <section class="hero-engine" style="background: linear-gradient(135deg, #1e1b4b, #0f172a);">
+            <div class="container">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><h1>Internal Clearance Administration Dashboard</h1><p style="color:#94a3b8;">Oversee incoming marketplace entries and analyze attached applicant file structures.</p></div>
+                    <button class="btn-action" style="background:var(--danger);" onclick="terminateSession()">Secure Terminate Session</button>
+                </div>
+            </div>
+        </section>
+        <main class="container">
+            <div class="analytics-strip">
+                <div class="analytics-card"><div class="analytics-count" id="stat-total">0</div><div class="analytics-label">Total Pipeline Count</div></div>
+                <div class="analytics-card"><div class="analytics-count" id="stat-pending" style="color:var(--warning);">0</div><div class="analytics-label">Awaiting Verification</div></div>
+                <div class="analytics-card"><div class="analytics-count" id="stat-approved" style="color:var(--success);">0</div><div class="analytics-label">Active Public Placements</div></div>
+            </div>
+            <div class="main-layout-grid" style="grid-template-columns: 1fr;">
+                <div class="content-panel">
+                    <h2 class="panel-title">Verification Clearance Pipeline Queue</h2>
+                    <div class="job-feed" id="admin-workflow-feed"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Logic Engine Subsystem Layout -->
+    <script>
+        // Core Web-Storage Sync Infrastructure[cite: 2]
+        let jobDatabase = JSON.parse(localStorage.getItem('peso_job_db')) || [
+            { id: 1, title: "Agricultural Operations Technical Supervisor", company: "AgriCorp Development Hub", location: "Ipil Heights", salary: "18,000 - 24,000", description: "Execute spatial mapping workflows and provide hands-on leadership for local yield improvement initiatives.", status: "Approved", applicants: [] },
+            { id: 2, title: "Information Systems Security Administrator", company: "Nexus Financial Operations", location: "Poblacion", salary: "45,000 - 60,000", description: "Perform system hardening configurations on server architectures and monitor network protocols.", status: "Approved", applicants: [] }
+        ];
+
+        function switchPortal(portalId) {
+            document.querySelectorAll('.portal-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`view-${portalId}`).classList.add('active');
+            
+            if(document.getElementById(`btn-${portalId}`)) {
+                document.getElementById(`btn-${portalId}`).classList.add('active');
+            }
+            syncAndRender();
+        }
+
+        function syncAndRender() {
+            localStorage.setItem('peso_job_db', JSON.stringify(jobDatabase));
+            
+            // 1. Render Public View Pipeline Listings
+            const publicFeed = document.getElementById('public-job-feed');
+            publicFeed.innerHTML = '';
+            const approvedListings = jobDatabase.filter(j => j.status === 'Approved');
+            
+            approvedListings.forEach(job => {
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                card.onclick = () => viewJobDetails(job.id);
+                card.innerHTML = `<div><h3>${job.title}</h3><div class="job-company">${job.company}</div><span class="pill pill-status-approved">${job.location}</span></div><div style="font-weight:700; color: var(--accent)">₱${job.salary}</div>`;
+                publicFeed.appendChild(card);
+            });
+
+            // 2. Render Administration Grid Layout Interfaces[cite: 2]
+            const adminFeed = document.getElementById('admin-workflow-feed');
+            if(adminFeed) {
+                adminFeed.innerHTML = '';
+                let pendingCount = 0, approvedCount = 0;
+
+                jobDatabase.forEach(job => {
+                    if(job.status === 'Pending') pendingCount++;
+                    if(job.status === 'Approved') approvedCount++;
+
+                    const card = document.createElement('div');
+                    card.style.flexDirection = 'column';
+                    card.style.alignItems = 'stretch';
+                    card.className = 'job-card';
+                    card.style.cursor = 'default';
+                    
+                    // Render applicant tracking parameters inside administration rows
+                    let applicantRowsHTML = '';
+                    if(job.applicants && job.applicants.length > 0) {
+                        job.applicants.forEach(app => {
+                            applicantRowsHTML += `
+                                <tr>
+                                    <td><b>${app.fullName}</b></td>
+                                    <td>${app.contactNum}</td>
+                                    <td>${app.brgyFile ? `<span class="thumbnail-link" onclick="openAttachedFile('${app.brgyFile}')">View Brgy Cert Image</span>` : `<span style="color:#94a3b8;">Not Attached</span>`}</td>
+                                    <td>${app.policeFile ? `<span class="thumbnail-link" onclick="openAttachedFile('${app.policeFile}')">View Police Clearance Image</span>` : `<span style="color:#94a3b8;">Not Attached</span>`}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        applicantRowsHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding: 16px 0;">No applicant registry profiles received for this position pipeline.</td></tr>`;
+                    }
+
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                            <div>
+                                <h3>${job.title}</h3>
+                                <div class="job-company">${job.company} | <span class="pill ${job.status==='Approved'?'pill-status-approved':'pill-status-pending'}">${job.status}</span></div>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-action" style="background:var(${job.status==='Pending'?'--success':'--warning'}); padding:8px 12px; font-size:0.8rem;" onclick="toggleStatus(${job.id})">${job.status==='Pending'?'Approve Release':'Revoke Archive'}</button>
+                                <button class="btn-action" style="background:var(--danger); padding:8px 12px; font-size:0.8rem;" onclick="purgeRecord(${job.id})">Purge</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px; border-top: 1px dashed var(--border); padding-top:12px;">
+                            <h4 style="font-size:0.85rem; text-transform:uppercase; color:#64748b; margin-bottom:6px;">Applicant Dossier Registry submissions (${job.applicants ? job.applicants.length : 0})</h4>
+                            <table class="app-table">
+                                <thead><tr><th>Full Name</th><th>Contact Number</th><th>Barangay Certificate</th><th>Police Clearance</th></tr></thead>
+                                <tbody>${applicantRowsHTML}</tbody>
+                            </table>
+                        </div>`;
+                    adminFeed.appendChild(card);
+                });
+
+                document.getElementById('stat-total').innerText = jobDatabase.length;
+                document.getElementById('stat-pending').innerText = pendingCount;
+                document.getElementById('stat-approved').innerText = approvedCount;
+            }
+        }
+
+        // Expanded Interactive Job Application Handling Shell
+        function viewJobDetails(id) {
+            const job = jobDatabase.find(j => j.id === id);
+            if(!job) return;
+
+            document.getElementById('job-detail-viewport').innerHTML = `
+                <h3 style="font-size:1.4rem; color:var(--text-dark);">${job.title}</h3>
+                <div class="job-company" style="margin-bottom:12px;">${job.company} | Area: ${job.location}</div>
+                <p style="font-size:0.95rem; margin-bottom:24px; color:var(--text-main); background: var(--bg-body); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);">${job.description}</p>
+                
+                <div style="border-top:1px solid var(--border); padding-top:20px;">
+                    <h4 style="margin-bottom:14px; font-size:1.05rem; color:var(--text-dark);">File Your Digital Job Application Form</h4>
+                    <form onsubmit="handleApplicationSubmission(event, ${job.id})">
+                        <div class="input-block">
+                            <label>Applicant Full Name</label>
+                            <input type="text" id="app-fullname" required placeholder="e.g., Juan Dela Cruz">
+                        </div>
+                        <div class="input-block">
+                            <label>Mobile Contact Number</label>
+                            <input type="tel" id="app-contactnum" required placeholder="e.g., 09123456789">
+                        </div>
+                        <div class="input-block">
+                            <label>Barangay Certificate (Attach Image File)</label>
+                            <input type="file" id="app-brgyfile" accept="image/*" required onchange="convertUploadedFile(this, 'brgy')">
+                        </div>
+                        <div class="input-block">
+                            <label>Police Clearance (Attach Image File)</label>
+                            <input type="file" id="app-policefile" accept="image/*" required onchange="convertUploadedFile(this, 'police')">
+                        </div>
+                        <button type="submit" class="btn-action" style="width:100%; margin-top:8px; background:var(--success);">Submit Profile Package Now</button>
+                    </form>
+                </div>`;
+            
+            // Re-instantiate temporary storage targets for document stringification
+            window.tempBrgyBase64 = "";
+            window.tempPoliceBase64 = "";
+        }
+
+        // Base64 File Extraction Module Subroutine
+        function convertUploadedFile(inputElement, variableTarget) {
+            const uploadedFile = inputElement.files[0];
+            if (!uploadedFile) return;
+
+            const readerInstance = new FileReader();
+            readerInstance.onloadend = function() {
+                if(variableTarget === 'brgy') window.tempBrgyBase64 = readerInstance.result;
+                if(variableTarget === 'police') window.tempPoliceBase64 = readerInstance.result;
+            }
+            readerInstance.readAsDataURL(uploadedFile);
+        }
+
+        function handleApplicationSubmission(event, targetJobId) {
+            event.preventDefault();
+            const fullNameVal = document.getElementById('app-fullname').value;
+            const contactNumVal = document.getElementById('app-contactnum').value;
+
+            const positionIndex = jobDatabase.findIndex(j => j.id === targetJobId);
+            if(positionIndex !== -1) {
+                if(!jobDatabase[positionIndex].applicants) {
+                    jobDatabase[positionIndex].applicants = [];
+                }
+                
+                // Pack parameters bundle securely into registry database object configuration array
+                jobDatabase[positionIndex].applicants.push({
+                    fullName: fullNameVal,
+                    contactNum: contactNumVal,
+                    brgyFile: window.tempBrgyBase64 || "",
+                    policeFile: window.tempPoliceBase64 || ""
+                });
+
+                alert("Application portfolio submitted. Your basic information profile and verified document uploads were processed successfully.");
+                syncAndRender();
+                document.getElementById('job-detail-viewport').innerHTML = `
+                    <div style="text-align: center; padding: 40px 0;">
+                        <span style="font-size: 3rem;">🎉</span>
+                        <p style="color: var(--success); font-weight:700; margin-top: 12px; font-size: 1.1rem;">Application Profile Pack Completed!</p>
+                        <p style="font-size: 0.9rem; color: var(--text-main); margin-top: 4px;">Local PESO monitoring workers can now evaluate your verification logs.</p>
+                    </div>`;
+            }
+        }
+
+        function handleEmployerPost(event) {
+            event.preventDefault();
+            jobDatabase.push({
+                id: Date.now(),
+                title: document.getElementById('job-title').value,
+                company: document.getElementById('company-name').value,
+                location: document.getElementById('job-loc').value,
+                salary: document.getElementById('job-pay').value,
+                description: document.getElementById('job-desc').value,
+                status: "Pending",
+                applicants: []
+            });
+            document.getElementById('employer-post-form').reset();
+            alert("Placement submitted to local authorities for verification review parameters validation.");
+            switchPortal('seeker');
+        }
+
+        function handleSecureLogin(event) {
+            event.preventDefault();
+            if(document.getElementById('admin-user').value === "pesoadmin" && document.getElementById('admin-pass').value === "12345") {
+                document.getElementById('error-box').style.display = "none";
+                document.getElementById('global-tabs').style.display = "none";
+                switchPortal('admin-dashboard');
+            } else {
+                document.getElementById('error-box').style.display = "block";
+            }
+        }
+
+        function terminateSession() {
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('global-tabs').style.display = 'flex';
+            switchPortal('seeker');
+        }
+
+        function toggleStatus(id) {
+            const i = jobDatabase.findIndex(j => j.id === id);
+            if(i !== -1) {
+                jobDatabase[i].status = jobDatabase[i].status === 'Approved' ? 'Pending' : 'Approved';
+                syncAndRender();
+            }
+        }
+
+        function purgeRecord(id) {
+            if(confirm("Confirm structural deletion? This removes all associated applicant files permanently.")) {
+                jobDatabase = jobDatabase.filter(j => j.id !== id);
+                syncAndRender();
+            }
+        }
+
+        function openAttachedFile(base64ImageString) {
+            if(!base64ImageString) return alert("No file uploaded.");
+            const targetWindow = window.open();
+            targetWindow.document.write(`<iframe src="${base64ImageString}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+        }
+
+        window.onload = () => { syncAndRender(); };
+    </script>
+</body>
+</html>

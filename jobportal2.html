@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PESO Dynamic Job Portal - Integrated System</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Sticky Premium Navigation Header */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 76px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-sub {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--border);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        /* Interface Switch Animation Core */
+        .portal-view {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .portal-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Layout Styling */
+        .hero-engine {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 70px 0 90px 0;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .hero-text-center {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto 40px auto;
+        }
+
+        .hero-text-center h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .hero-text-center p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* Search Engine Module */
+        .search-engine-bar {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            gap: 12px;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input-group select, 
+        .search-input-group input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background-color: var(--bg-body);
+            outline: none;
+            appearance: none;
+            transition: var(--transition);
+        }
+
+        .search-input-group select:focus,
+        .search-input-group input:focus {
+            border-color: var(--accent);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        .search-input-group::before {
+            content: ""; position: absolute; left: 16px; width: 18px; height: 18px;
+            background-repeat: no-repeat; background-size: contain; opacity: 0.5;
+        }
+        .group-keyword::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E"); }
+        .group-location::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E"); }
+        .group-category::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'/%3E%3C/svg%3E"); }
+
+        .btn-action {
+            background: var(--accent); color: white; padding: 14px 28px; border-radius: var(--radius-md);
+            border: none; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: var(--transition);
+        }
+        .btn-action:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+        /* Structural Layout Grid System */
+        .main-layout-grid {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 32px; margin-top: -40px; margin-bottom: 80px;
+        }
+
+        .content-panel {
+            background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border);
+            padding: 32px; box-shadow: var(--shadow);
+        }
+
+        .panel-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .panel-title { font-size: 1.45rem; font-weight: 800; color: var(--text-dark); }
+
+        /* Interactive Dynamic Cards */
+        .job-feed { display: flex; flex-direction: column; gap: 16px; }
+        .job-card {
+            border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px;
+            background: var(--bg-card); cursor: pointer; transition: var(--transition); display: flex; justify-content: space-between;
+        }
+        .job-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+        .job-card-details h3 { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .job-company { color: var(--accent); font-weight: 600; font-size: 0.95rem; margin-bottom: 12px; }
+        
+        .job-meta-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pill { background: var(--bg-body); color: var(--text-main); padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: var(--radius-sm); }
+        .pill-status-pending { background: #fef3c7; color: #d97706; }
+        .pill-status-approved { background: #d1fae5; color: #059669; }
+
+        .job-salary { font-weight: 700; color: var(--text-dark); }
+        .inspect-panel-sticky { position: sticky; top: 100px; height: fit-content; }
+        .inspect-header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px; }
+        .inspect-title { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); }
+        .section-block { margin-bottom: 24px; }
+        .section-block h4 { font-size: 0.95rem; text-transform: uppercase; color: #64748b; margin-bottom: 8px; font-weight: 700; }
+
+        /* Form Subsystems UI */
+        .form-grid-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .input-block { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .input-block label { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); }
+        .input-block input, .input-block textarea, .input-block select {
+            padding: 12px 14px; border: 1px solid var(--border); background: var(--bg-body); border-radius: var(--radius-sm); font-size: 0.95rem; outline: none; transition: var(--transition);
+        }
+        .input-block input:focus, .input-block textarea:focus, .input-block select:focus { border-color: var(--accent); background: white; }
+
+        /* Secure Login Interface Core Layout */
+        .login-canvas {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border-radius: var(--radius-lg); padding: 40px; color: white; max-width: 500px; margin: 40px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: fadeIn 0.4s ease;
+        }
+        .error-banner { background: #fef2f2; color: var(--danger); border: 1px solid #fee2e2; padding: 12px; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; margin-bottom: 20px; display: none; }
+
+        /* Analytics Counters Grid */
+        .analytics-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .analytics-card { background: var(--bg-body); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); text-align: center; }
+        .analytics-count { font-size: 1.85rem; font-weight: 800; color: var(--accent); }
+        .analytics-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: #64748b; }
+
+        @media (max-width: 1024px) {
+            .main-layout-grid { grid-template-columns: 1fr; }
+            .inspect-panel-sticky { position: static; }
+            .search-engine-bar { grid-template-columns: 1fr; }
+            .analytics-strip { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo-area" onclick="switchPortal('seeker')">
+                <div class="logo-icon">P</div>
+                <div class="logo-text">
+                    <span class="logo-title">PESO-Portal</span>
+                    <span class="logo-sub">LGU Integrated System</span>
+                </div>
+            </a>
+            
+            <nav class="nav-tabs" id="global-tabs">
+                <button class="tab-btn active" id="btn-seeker" onclick="switchPortal('seeker')">For Job Seekers</button>
+                <button class="tab-btn" id="btn-employer" onclick="switchPortal('employer')">For Employers</button>
+                <button class="tab-btn" id="btn-admin-gate" style="background: #e2e8f0; font-weight: 700;" onclick="switchPortal('admin-login')">Admin Secure Access</button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="view-seeker" class="portal-view active">
+        <section class="hero-engine">
+            <div class="container">
+                <div class="hero-text-center">
+                    <h1>Find Local Opportunities and Verified Careers</h1>
+                    <p>Centralized platform matching job seekers with enterprises verified by your local Public Employment Service Office.</p>
+                </div>
+
+                <div class="search-engine-bar">
+                    <div class="search-input-group group-keyword">
+                        <input type="text" id="filter-keyword" placeholder="Search by job title or keyword..." oninput="executeSearchFilter()">
+                    </div>
+                    <div class="search-input-group group-location">
+                        <select id="filter-location" onchange="executeSearchFilter()">
+                            <option value="">All Regions / Barangays</option>
+                            <option value="Poblacion">Barangay Poblacion</option>
+                            <option value="Ipil Heights">Ipil Heights</option>
+                            <option value="Sanito">Sanito</option>
+                        </select>
+                    </div>
+                    <div class="search-input-group group-category">
+                        <select id="filter-category" onchange="executeSearchFilter()">
+                            <option value="">All Fields & Categories</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="Agriculture">Agriculture & Farming</option>
+                            <option value="Admin">Administrative / Corporate</option>
+                        </select>
+                    </div>
+                    <button class="btn-action" onclick="executeSearchFilter()">Search Vacancies</button>
+                </div>
+            </div>
+        </section>
+
+        <main class="container" style="margin-top: 40px;">
+            <div class="main-layout-grid">
+                <div class="content-panel">
+                    <div class="panel-heading"><h2 class="panel-title">Available Verified Positions</h2></div>
+                    <div class="job-feed" id="public-job-feed"></div>
+                </div>
+
+                <div class="inspect-panel-sticky">
+                    <div class="content-panel" id="job-detail-viewport">
+                        <p style="text-align: center; color: var(--text-main);">Select an entry item card to evaluate detailed operational conditions and apply.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-employer" class="portal-view">
+        <section class="hero-engine" style="padding: 50px 0 60px 0;">
+            <div class="container">
+                <div class="hero-text-center" style="margin-bottom:0;">
+                    <h1>Enterprise Registration & Placement Portal</h1>
+                    <p>Deploy openings across the verified municipal database framework. Submissions require admin review before release.</p>
+                </div>
+            </div>
+        </section>
+
+        <main class="container" style="margin-top: 40px;">
+            <div class="main-layout-grid" style="grid-template-columns: 1fr;">
+                <div class="content-panel">
+                    <h2 class="panel-title" style="margin-bottom:20px;">Deploy a New Job Vacancy</h2>
+                    <form id="employer-post-form" onsubmit="handleEmployerPost(event)">
+                        <div class="form-grid-split">
+                            <div class="input-block">
+                                <label for="job-title">Target Job Title</label>
+                                <input type="text" id="job-title" required placeholder="e.g., Senior Operations Supervisor">
+                            </div>
+                            <div class="input-block">
+                                <label for="company-name">Enterprise Name</label>
+                                <input type="text" id="company-name" required placeholder="e.g., AgriCorp Development Hub">
+                            </div>
+                        </div>
+                        <div class="form-grid-split">
+                            <div class="input-block">
+                                <label for="job-cat">Operational Field Category</label>
+                                <select id="job-cat" required>
+                                    <option value="IT">Information Technology</option>
+                                    <option value="Agriculture">Agriculture & Farming</option>
+                                    <option value="Admin">Administrative / Corporate</option>
+                                </select>
+                            </div>
+                            <div class="input-block">
+                                <label for="job-loc">Regional Worksite Barangay</label>
+                                <select id="job-loc" required>
+                                    <option value="Poblacion">Barangay Poblacion</option>
+                                    <option value="Ipil Heights">Ipil Heights</option>
+                                    <option value="Sanito">Sanito</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid-split">
+                            <div class="input-block">
+                                <label for="job-type">Employment Structure Status</label>
+                                <select id="job-type" required>
+                                    <option value="Full-Time">Full-Time Commitment</option>
+                                    <option value="Seasonal">Seasonal Employment</option>
+                                    <option value="SPES">SPES Student Program</option>
+                                </select>
+                            </div>
+                            <div class="input-block">
+                                <label for="job-pay">Monthly Compensation Range (PHP)</label>
+                                <input type="text" id="job-pay" required placeholder="e.g., 22,000 - 28,000">
+                            </div>
+                        </div>
+                        <div class="input-block">
+                            <label for="job-desc">Detailed Work Responsibilities & Core Qualifications</label>
+                            <textarea id="job-desc" rows="5" required placeholder="Specify experience levels and technical certifications needed..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-action" style="width: 100%;">Submit Placement Data for Verification Review</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-admin-login" class="portal-view">
+        <div class="login-canvas">
+            <h2 style="margin-bottom: 6px; font-weight: 800; text-align: center;">PESO Administrative Gateway</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px; text-align: center;">System Oversight Verification Workspace</p>
+            
+            <div id="error-box" class="error-banner">Invalid secure parameter access tokens.</div>
+            
+            <form onsubmit="handleSecureLogin(event)">
+                <div class="input-block">
+                    <label style="color: white;">Administrative Username</label>
+                    <input type="text" id="admin-user" required placeholder="Enter username">
+                </div>
+                <div class="input-block" style="margin-bottom: 24px;">
+                    <label style="color: white;">Access Security Pin Code</label>
+                    <input type="password" id="admin-pass" required placeholder="Enter passkey">
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%; background: var(--accent); padding: 14px;">Authorize Workspace Credentials</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="view-admin-dashboard" class="portal-view">
+        <section class="hero-engine" style="padding: 40px 0 50px 0; background: linear-gradient(135deg, #1e1b4b, #311042);">
+            <div class="container">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 style="font-size: 2rem;">Internal Management Dashboard</h1>
+                        <p style="color: #cbd5e1;">Review employer application queues and alter entry status parameters in real-time.</p>
+                    </div>
+                    <button class="btn-action" style="background: var(--danger);" onclick="terminateSession()">Terminate Admin Session</button>
+                </div>
+            </div>
+        </section>
+
+        <main class="container" style="margin-top: 32px;">
+            <div class="analytics-strip">
+                <div class="analytics-card"><div class="analytics-count" id="stat-total">0</div><div class="analytics-label">Total Listings</div></div>
+                <div class="analytics-card"><div class="analytics-count" id="stat-pending" style="color: var(--warning);">0</div><div class="analytics-label">Awaiting Verification</div></div>
+                <div class="analytics-card"><div class="analytics-count" id="stat-approved" style="color: var(--success);">0</div><div class="analytics-label">Approved Live</div></div>
+            </div>
+
+            <div class="content-panel">
+                <h2 class="panel-title" style="margin-bottom: 20px;">Verification Clearance Control Stream Queue</h2>
+                <div class="job-feed" id="admin-workflow-feed"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Synchronized Base Dataset Core Initialization
+        let jobDatabase = JSON.parse(localStorage.getItem('peso_job_db')) || [
+            { id: 1, title: "Agricultural Operations Technical Supervisor", company: "AgriCorp Development Hub", category: "Agriculture", location: "Ipil Heights", type: "Full-Time", salary: "18,000 - 24,000", description: "Oversee automated processing frameworks, execute spatial mapping tasks, and provide hands-on leadership for regional yield improvement projects.", status: "Approved" },
+            { id: 2, title: "Information Systems Security Administrator", company: "Nexus Financial Operations", category: "IT", location: "Poblacion", type: "Full-Time", salary: "45,000 - 60,000", description: "Perform systems hardening protocols on server architectures, audit firewall policy rules, and maintain data confidentiality configurations across web networks.", status: "Approved" },
+            { id: 3, title: "Junior Corporate Records Clerk", company: "Zamboanga Trade Hub", category: "Admin", location: "Sanito", type: "SPES", salary: "12,500 Base", description: "Organize document workflows, maintain client files, and assist constituents with operational public service forms.", status: "Pending" }
+        ];
+
+        // Central Switch Router View Logic
+        function switchPortal(portalId) {
+            document.querySelectorAll('.portal-view').forEach(view => view.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`view-${portalId}`).classList.add('active');
+            
+            // Adjust header button styles based on selected view
+            if(portalId === 'seeker') document.getElementById('btn-seeker').classList.add('active');
+            if(portalId === 'employer') document.getElementById('btn-employer').classList.add('active');
+            if(portalId === 'admin-login') document.getElementById('btn-admin-gate').classList.add('active');
+            
+            syncAndRenderFeed();
+        }
+
+        // Live Feed Renderer Controller
+        function syncAndRenderFeed() {
+            localStorage.setItem('peso_job_db', JSON.stringify(jobDatabase));
+            
+            // 1. Render Seeker Board Layout Feed
+            const publicFeed = document.getElementById('public-job-feed');
+            publicFeed.innerHTML = '';
+            const approvedJobs = jobDatabase.filter(j => j.status === 'Approved');
+
+            if(approvedJobs.length === 0) {
+                publicFeed.innerHTML = '<p style="text-align:center; padding:20px;">No public positions cleared for distribution.</p>';
+            } else {
+                approvedJobs.forEach(job => {
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    card.onclick = () => inspectVacancyDetails(job);
+                    card.innerHTML = `
+                        <div class="job-card-details">
+                            <h3>${job.title}</h3>
+                            <div class="job-company">${job.company}</div>
+                            <div class="job-meta-pills">
+                                <span class="pill">${job.type}</span>
+                                <span class="pill">${job.location}</span>
+                            </div>
+                        </div>
+                        <div class="job-salary">₱${job.salary}</div>
+                    `;
+                    publicFeed.appendChild(card);
+                });
+            }
+
+            // 2. Render Internal Admin Operations Board Control Queue
+            const adminFeed = document.getElementById('admin-workflow-feed');
+            if (adminFeed) {
+                adminFeed.innerHTML = '';
+                let pendingCount = 0, approvedCount = 0;
+
+                jobDatabase.forEach(job => {
+                    if(job.status === 'Pending') pendingCount++;
+                    if(job.status === 'Approved') approvedCount++;
+
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    const badgeClass = job.status === 'Approved' ? 'pill-status-approved' : 'pill-status-pending';
+                    
+                    card.innerHTML = `
+                        <div class="job-card-details">
+                            <h3>${job.title}</h3>
+                            <div class="job-company">${job.company} | <span class="pill ${badgeClass}">${job.status}</span></div>
+                            <p style="font-size:0.9rem; color:var(--text-main); margin-top:4px;">${job.description}</p>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+                            ${job.status === 'Pending' ? 
+                                `<button class="btn-action" style="background:var(--success); padding:8px 12px; font-size:0.85rem;" onclick="mutateJobStatus(${job.id}, 'Approved')">Approve</button>` : 
+                                `<button class="btn-action" style="background:var(--warning); padding:8px 12px; font-size:0.85rem;" onclick="mutateJobStatus(${job.id}, 'Pending')">Revoke</button>`
+                            }
+                            <button class="btn-action" style="background:var(--danger); padding:8px 12px; font-size:0.85rem;" onclick="purgeRecord(${job.id})">Delete</button>
+                        </div>
+                    `;
+                    adminFeed.appendChild(card);
+                });
+
+                document.getElementById('stat-total').innerText = jobDatabase.length;
+                document.getElementById('stat-pending').innerText = pendingCount;
+                document.getElementById('stat-approved').innerText = approvedCount;
+            }
+        }
+
+        // Inspection Sidebar Details View Engine
+        function inspectVacancyDetails(job) {
+            document.getElementById('job-detail-viewport').innerHTML = `
+                <div class="inspect-header">
+                    <h3 class="inspect-title">${job.title}</h3>
+                    <div class="job-company">${job.company}</div>
+                </div>
+                <div class="section-block"><h4>Compensation Parameters</h4><p style="font-weight:700; color:var(--text-dark);">₱${job.salary} / Month</p></div>
+                <div class="section-block"><h4>Worksite Area Sector</h4><p>${job.location} Hub</p></div>
+                <div class="section-block"><h4>Core Position Profile Qualifications</h4><p style="font-size:0.95rem; color:var(--text-main);">${job.description}</p></div>
+                <button class="btn-action" style="width:100%;" onclick="alert('Your documentation was dispatched to the tracking queue.')">Submit Immediate Application</button>
+            `;
+        }
+
+        // Live Action Filtering Subroutine
+        function executeSearchFilter() {
+            const keyword = document.getElementById('filter-keyword').value.toLowerCase();
+            const location = document.getElementById('filter-location').value;
+            const category = document.getElementById('filter-category').value;
+            const cards = document.querySelectorAll('#public-job-feed .job-card');
+            
+            const approvedJobs = jobDatabase.filter(j => j.status === 'Approved');
+            let cardElementIndex = 0;
+
+            approvedJobs.forEach(job => {
+                const el = cards[cardElementIndex++];
+                if(!el) return;
+                const matchK = job.title.toLowerCase().includes(keyword) || job.company.toLowerCase().includes(keyword);
+                const matchL = !location || job.location === location;
+                const matchC = !category || job.category === category;
+                el.style.display = (matchK && matchL && matchC) ? 'flex' : 'none';
+            });
+        }
+
+        // Form Creation Submissions Handler
+        function handleEmployerPost(event) {
+            event.preventDefault();
+            const payload = {
+                id: Date.now(),
+                title: document.getElementById('job-title').value,
+                company: document.getElementById('company-name').value,
+                category: document.getElementById('job-cat').value,
+                location: document.getElementById('job-loc').value,
+                type: document.getElementById('job-type').value,
+                salary: document.getElementById('job-pay').value,
+                description: document.getElementById('job-desc').value,
+                status: "Pending"
+            };
+            jobDatabase.push(payload);
+            document.getElementById('employer-post-form').reset();
+            alert("Record transmitted. Your listing will appear on the public feed once approved by a PESO official.");
+            switchPortal('seeker');
+        }
+
+        // Admin Authority Logic Subsystems
+        function handleSecureLogin(event) {
+            event.preventDefault();
+            const u = document.getElementById('admin-user').value;
+            const p = document.getElementById('admin-pass').value;
+            
+            // Credentials parameters
+            if(u === "pesoadmin" && p === "12345") {
+                document.getElementById('error-box').style.display = "none";
+                document.getElementById('global-tabs').style.display = "none"; // Lock public tabs during active admin session
+                switchPortal('admin-dashboard');
+            } else {
+                document.getElementById('error-box').style.display = "block";
+            }
+        }
+
+        function terminateSession() {
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('global-tabs').style.display = 'flex';
+            switchPortal('seeker');
+        }
+
+        function mutateJobStatus(id, targetState) {
+            const idx = jobDatabase.findIndex(j => j.id === id);
+            if(idx !== -1) {
+                jobDatabase[idx].status = targetState;
+                syncAndRenderFeed();
+            }
+        }
+
+        function purgeRecord(id) {
+            if(confirm("Permanently purge this placement entry from the system registries?")) {
+                jobDatabase = jobDatabase.filter(j => j.id !== id);
+                syncAndRenderFeed();
+            }
+        }
+
+        window.onload = () => { syncAndRenderFeed(); };
+    </script>
+</body>
+</html>
